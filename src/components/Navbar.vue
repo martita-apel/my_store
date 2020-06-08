@@ -10,6 +10,7 @@
           aria-label="menu"
           aria-expanded="false"
           data-target="navbarMenu"
+          :class="{ 'is-active': displayMenu }"
           @click="displayMenu = !displayMenu"
         >
           <span aria-hidden="true"></span>
@@ -18,7 +19,11 @@
         </a>
       </div>
       <!--  -->
-      <div id="navbarMenu" class="navbar-menu" :style="displayMenuStyle">
+      <div
+        id="navbarMenu"
+        class="navbar-menu"
+        :class="{ 'is-active': displayMenu }"
+      >
         <div class="navbar-start">
           <!--
           <a class="navbar-item">
@@ -101,9 +106,9 @@ export default {
     },
   },
   computed: {
-    displayMenuStyle() {
+    /* displayMenuStyle() {
       return { display: this.displayMenu ? "block" : "none" };
-    },
+    }, */
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
     },

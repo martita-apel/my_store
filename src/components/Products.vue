@@ -29,15 +29,15 @@
         <div class="card has-equal-height">
           <div class="image-card">
             <div class="image has-spacing image">
-              <img alt="product logo" :src="'/' + p.img" />
+              <img alt="product logo" :src="p.data.picture" />
               <!--               <img alt="product logo" src="../assets/img/ingmar.jpg" />
               -->
             </div>
           </div>
           <div class="card-content">
             <div class="content">
-              <h3 class="title">{{ p.name }}</h3>
-              <p class="subtitle">$ {{ p.price * p.qty }}</p>
+              <h3 class="title">{{ p.data.name }}</h3>
+              <p class="subtitle">$ {{ p.data.price * p.qty }}</p>
               <!-- <div class="has-spacing-bottom"> -->
               <!-- <div class="has-spacing-bottom">
                   <span class="tag is-medium">tortor</span>
@@ -61,7 +61,10 @@
                   <i class="mdi mdi-plus"></i>
                 </button>
               </div>
-              <button @click="addToCart(p)" class="button is-pulled-right is-warning">
+              <button
+                @click="addToCart(p)"
+                class="button is-pulled-right is-warning"
+              >
                 <i class="mdi mdi-cart"></i>
               </button>
               <div class="is-clearfix"></div>
@@ -76,24 +79,26 @@
 </template>
 
 <script>
-import { Products } from "../services/API";
+/* import { Products } from "../services/API";
+ */
+import { mapState } from "vuex";
 
 export default {
   components: {},
   props: {},
   data() {
     return {
-      products: [],
-      search: ""
+      /*       products: [],
+       */ search: "",
     };
   },
   methods: {
     incrQty(id) {
-      let idx = this.products.map(p => p.id).indexOf(id);
+      let idx = this.products.map((p) => p.id).indexOf(id);
       this.products[idx].qty++;
     },
     decrQty(id) {
-      let idx = this.products.map(p => p.id).indexOf(id);
+      let idx = this.products.map((p) => p.id).indexOf(id);
       // console.log('decr on ', this.products[idx])
       if (this.products[idx].qty > 1) {
         this.products[idx].qty--;
@@ -105,37 +110,41 @@ export default {
       this.$store.dispatch("addToCart", p);
       // reset qty
       product.qty = 1;
-    }
+    },
     /*  imgUrl() {
       for (const prop in this.products) {
         console.log(this.products[prop].name);
         return this.products[prop].img;
-        
+
       }
     } */
   },
   computed: {
+    ...mapState(["products"]),
     computedProductList() {
-      return this.products.filter(p => {
-        return p.name.toLowerCase().includes(this.search.toLowerCase());
+      console.log(this.products);
+      return this.products.filter((p) => {
+        return p.data.name.toLowerCase().includes(this.search.toLowerCase());
       });
-    }
+    },
   },
   watch: {},
   created() {
+    this.$store.dispatch("getProducts");
+
     // Pull products from Product service
-    Products.all()
-      .then(response => {
-        response.data.forEach(p => {
+    /*  Products.all()
+      .then((response) => {
+        response.data.forEach((p) => {
           p["qty"] = 1;
           this.products.push(p);
         });
       })
-      .catch(error => {
+      .catch((error) => {
         alert(error.message);
-      });
+      }); */
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 
