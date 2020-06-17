@@ -3,6 +3,8 @@ import Vuex from "vuex";
 import axios from "axios";
 
 Vue.use(Vuex);
+/* Vue.use(axios)
+ */
 
 function setInStorage(key, obj) {
   localStorage.setItem(key, JSON.stringify(obj));
@@ -13,7 +15,7 @@ function getFromStorage(key) {
 function getCartTotal(productsList) {
   let price = 0.0;
   productsList.forEach((p) => {
-    price += p.price * p.qty;
+    price += p.data.price * p.qty;
   });
   return price;
 }
@@ -33,6 +35,15 @@ export default new Vuex.Store({
     showCart: false,
     products: [],
     loading: false,
+    edit: false,
+  },
+  getters: {
+    // User
+    isLoggedIn: (state) => !!state.currentUser,
+    currentUser: (state) => state.currentUser,
+    // Cart
+    shoppingCart: (state) => state.shoppingCart,
+    showCart: (state) => state.showCart,
   },
   mutations: {
     //reset mut
@@ -40,7 +51,11 @@ export default new Vuex.Store({
       state.loading = !state.loading;
     },
     GET_PRODUCTS(state, products) {
-      state.products = products;
+      state.products = [];
+      products.forEach((product) => {
+        product["qty"] = 1;
+        state.products.push(product);
+      });
       state.loading = false;
     },
 
@@ -86,6 +101,9 @@ export default new Vuex.Store({
     },
     UPDATE_SHOW_CART(state, value) {
       state.showCart = value;
+    },
+    UPDATE_EDIT(state) {
+      state.edit = !state.edit;
     },
   },
   actions: {
@@ -146,22 +164,15 @@ export default new Vuex.Store({
       axios
         .get(
           "https://us-central1-tddg3-e867b.cloudfunctions.net/products/products",
-          {
-            headers: { "Content-type": "text/plain" },
-          }
+          { headers: { "Content-type": "text/plain" } }
         )
         .then((accept) => {
           let data = accept.data;
           commit("GET_PRODUCTS", data);
         });
     },
-  },
-  getters: {
-    // User
-    isLoggedIn: (state) => !!state.currentUser,
-    currentUser: (state) => state.currentUser,
-    // Cart
-    shoppingCart: (state) => state.shoppingCart,
-    showCart: (state) => state.showCart,
+    updateEdit({ commit }) {
+      commit("UPDATE_EDIT");
+    },
   },
 });

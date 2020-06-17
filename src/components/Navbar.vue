@@ -18,6 +18,7 @@
           <span aria-hidden="true"></span>
         </a>
       </div>
+
       <!--  -->
       <div
         id="navbarMenu"
@@ -43,6 +44,10 @@
               >
             </span>
           </a>
+          <router-link class="navbar-item" to="/create"
+            >Crear Producto</router-link
+          >
+
           <router-link
             v-if="!isLoggedIn"
             to="/login"
@@ -74,6 +79,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import firebase from "firebase";
 
 export default {
@@ -91,6 +97,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions([]),
     showCart(event) {
       event.preventDefault();
       this.$store.dispatch("updateShowCart", true);

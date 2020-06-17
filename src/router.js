@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
+import Create from "./components/Create.vue";
 import firebase from "firebase";
 
 Vue.use(Router);
@@ -14,12 +15,17 @@ const router = new Router({
       redirect: Home,
     },
     {
-      path: "/",
+      path: "/home",
       name: "home",
       component: Home,
       meta: {
         requireLogin: true,
       },
+    },
+    {
+      path: "/create",
+      name: "create",
+      component: Create,
     },
     {
       path: "/about",
@@ -44,9 +50,9 @@ router.beforeEach((to, from, next) => {
   let authRequired = to.matched.some((route) => route.meta.requireLogin);
   if (!user && authRequired) {
     next("login");
-  } else if (user && !authRequired) {
+  } /* else if (user && !authRequired) {
     next("home");
-  } else {
+  }  */ else {
     next();
   }
 });

@@ -88,8 +88,8 @@ export default {
   props: {},
   data() {
     return {
-      /*       products: [],
-       */ search: "",
+      /*       products: [],*/
+      search: "",
     };
   },
   methods: {
@@ -124,7 +124,8 @@ export default {
     computedProductList() {
       console.log(this.products);
       return this.products.filter((p) => {
-        return p.data.name.toLowerCase().includes(this.search.toLowerCase());
+        return p.data.name;
+        /*  toLowerCase().includes(this.search.toLowerCase()); */
       });
     },
   },
